@@ -1,0 +1,69 @@
+{
+  "description": "File (or F$) is a NodeJS file management helper with a super simple API to make build scripts lite and readable. Powered by Glob and Fs-extra.",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^10.12.11",
+    "@zouloux/semver-increment": "^0.2.0",
+    "docsify": "^4.8.6",
+    "docsify-cli": "^4.3.0",
+    "gh-pages": "^1.2.0",
+    "husky": "^1.2.0",
+    "mocha": "^5.2.0",
+    "npm-scripts-info": "^0.3.9",
+    "typescript": "^3.2.1"
+  },
+  "scripts": {
+    "help": "node tools/help.js",
+    "1-------------------------------------": " BUILD & TEST",
+    "?build": "echo Compile typescript sources to JS files and typescript definitions.",
+    "build": "tsc",
+    "?test": "echo Run unit tests on compiled files.",
+    "test": "mocha tests/tests.js",
+    "2-------------------------------------": " CLEANING ",
+    "?clean": "echo Remove all generated files like compiled JS files and typescript definitions.",
+    "clean": "rm -f dist/**.js && rm -f dist/**.d.ts",
+    "3-------------------------------------": " PACKAGE TOOLS ",
+    "?reinstall": "echo Remove and re-install all node modules.",
+    "reinstall": "rm -rf node_modules/ package-lock.json && npm i",
+    "?increment": "echo Increment package.json version. Append with semver argument (major|minor|patch).",
+    "increment": "node tools/increment",
+    "4-------------------------------------": " DOCUMENTATION ",
+    "?doc": "echo Start documentation server.",
+    "doc": "docsify serve doc"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "node tools/pre-commit.js",
+      "pre-push": "node tools/pre-push.js"
+    }
+  },
+  "directories": {
+    "test": "tests"
+  },
+  "name": "@solid-js/files",
+  "version": "0.1.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/solid-js/files.git"
+  },
+  "keywords": [
+    "solid",
+    "files",
+    "simple",
+    "directory",
+    "directories",
+    "json",
+    "yaml",
+    "management",
+    "easy"
+  ],
+  "author": "Alexis Bouhet",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/solid-js/files/issues"
+  },
+  "homepage": "https://github.com/solid-js/files#readme"
+}
