@@ -22,6 +22,8 @@
     "build": "tsc",
     "?test": "echo Run unit tests on compiled files.",
     "test": "mocha tests/tests.js",
+    "?wip": "echo Use wip.js to work on your lib before it's testable.",
+    "wip": "npm run build --silent && node tests/wip",
     "2-------------------------------------": " CLEANING ",
     "?clean": "echo Remove all generated files like compiled JS files and typescript definitions.",
     "clean": "rm -f dist/**.js && rm -f dist/**.d.ts",
@@ -44,7 +46,7 @@
     "test": "tests"
   },
   "name": "@solid-js/files",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/solid-js/files.git"

@@ -1,4 +1,5 @@
 import { FileEntity } from './FileEntity'
+import { defaultTemplateMarkers } from '../index'
 
 
 
@@ -30,7 +31,7 @@ export class File extends FileEntity
 		
 	}
 
-	template ()
+	template (data:any, markers:string[] = defaultTemplateMarkers)
 	{
 
 	}
