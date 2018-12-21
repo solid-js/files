@@ -69,3 +69,4 @@ File('package.json').content({
 	emptyJson: true
 }).write();
 
+File('fichier').content().template().replace().write();
