@@ -45,19 +45,22 @@ catch (e) { needsDoc = true }
 // Regenerate doc
 if ( needsDoc )
 {
-	log('> Doc updated, regenerating and publishing to github.io ...');
+	log('> Doc updated, publishing to github.io ...');
 	exec('gh-pages -d doc', true);
 	log('> Done !');
 }
 
 // ----------------------------------------------------------------------------- NPM PUBLISH
 
-// Get package.json info
-const packageJSON = require('../package.json');
+// Hook only if we are on a real package here (and not typescript-npm-starter)
+if ( !inRealPackage() ) return;
 
-// Only publish to npm if we are on a real package here (and not typescript-npm-starter)
-if ( inRealPackage() )
+// Do not publish to NPM if .nopublish file exists
+if ( !require('fs').existsSync('.nopublish') )
 {
+	// Get package.json info
+	const packageJSON = require('../package.json');
+
 	log(`> Publishing package ${packageJSON.name} version ${packageJSON.version} to NPM ...`);
 	exec('npm publish', true);
 	log('> Done !');
@@ -65,18 +68,14 @@ if ( inRealPackage() )
 
 // ----------------------------------------------------------------------------- PUSH TAGS
 
-// Push tags only if we are on a real package here (and not typescript-npm-starter)
-if ( inRealPackage() )
+// Here we push our tag which has been auto-generated in pre-commit.js
+try
 {
-	// Here we push our tag which has been auto-generated in pre-commit.js
-	try
-	{
-		log('> Pushing version tag ...');
-		exec('git push --tags');
-		log('> Done !');
-	}
-	catch (e)
-	{
-		error(`! Error push tag.\n${e.message}`);
-	}
+	log('> Pushing version tag ...');
+	exec('git push --tags');
+	log('> Done !');
+}
+catch (e)
+{
+	error(`! Error push tag.\n${e.message}`);
 }

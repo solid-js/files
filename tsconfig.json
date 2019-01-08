@@ -4,6 +4,7 @@
 		// --------------------------------------------------------------------- INPUT
 
 		// Included libraries for NPM
+		// You can add libs for Dom, Node, etc ...
 		"lib": ["ES2016", "ES2017", "ES2018", "ESNext"],
 
 		// Where typescript files are
@@ -20,9 +21,8 @@
     	"outDir": "./dist",
 
 		// Compile typescript files to ready-to-use es next modules
+		// Note : tsconfig.module.json will output mjs files.
 		"module": "commonjs",
-    	//"target": "ES6",
-    	//"module": "esnext",
     	"target": "esnext",
 		"moduleResolution": "node",
 
@@ -68,8 +68,8 @@
 		"traceResolution": false,
 		"pretty": true
 
+		// --------------------------------------------------------------------- HELPERS
 
-		// TODO : Sure ?
 		//"importHelpers" : true,
 		//"noEmitHelpers" : true,
 	},

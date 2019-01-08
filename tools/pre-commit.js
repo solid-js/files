@@ -8,8 +8,9 @@
 
 const { log, exec, error, inRealPackage } = require('./cli');
 const { getPackageVersion } = require('@zouloux/semver-increment')
-const fs = require('fs');
-const path = require('path');
+
+// Hook only if we are on a real package here (and not typescript-npm-starter)
+if ( !inRealPackage() ) return;
 
 // ----------------------------------------------------------------------------- 1. VERSION INCREMENT
 
@@ -39,9 +40,7 @@ if ( inRealPackage() )
 // Clean and build sources. Halt on error.
 try
 {
-	log(`> Building sources ...`);
 	exec(`npm run clean --silent && npm run build --silent`, true);
-	log(`> Done !\n`);
 }
 catch (e)
 {
@@ -53,9 +52,9 @@ catch (e)
 // Run tests. Halt on error.
 try
 {
-	log(`> Running tests ...`);
+	log(`Running tests ...`);
 	exec(`npm run test --silent`, true);
-	log(`> Done !\n`);
+	log(`Done !\n`);
 }
 catch (e)
 {

@@ -20,8 +20,6 @@
 
 const { log, exec, error, inRealPackage } = require('./cli');
 const { incrementPackage } = require('@zouloux/semver-increment')
-const path = require('path');
-const fs = require('fs');
 
 // Only continue if we are on a real package here (and not typescript-npm-starter)
 if ( !inRealPackage() ) return;

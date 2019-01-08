@@ -1,15 +1,14 @@
-const exec = require('child_process').execSync;
+const execSync = require('child_process').execSync;
 const chalk = require('chalk');
-
-const inRealPackage = (require('../package.json').name != null);
 
 module.exports = {
 	/**
 	 * Log a bold line in CLI
 	 */
-	log: ( message ) =>
+	log: ( message, noBold, noLine ) =>
 	{
-		console.log( chalk.bold(message) )
+		const content = noBold ? message : chalk.bold(message);
+		noLine ? process.stdout.write( content ) : console.log( content );
 	},
 
 	/**
@@ -25,11 +24,13 @@ module.exports = {
 	/**
 	 * Exec a command and return stdout as string.
 	 */
-	exec: (command, verbose) =>
+	exec: (command, options) =>
 	{
-		const result = exec(command, verbose && {
-			stdio: [1, 2]
-		});
+		const result = execSync(command, (
+			options === true
+			? { stdio: [1, 2] }
+			: options
+		));
 		return result ? result.toString() : null;
 	},
 
@@ -38,5 +39,5 @@ module.exports = {
 	 * A real package is a package that goes on NPM and is created from
 	 * typescript-npm-starter. 
 	 */
-	inRealPackage: () => inRealPackage
+	inRealPackage: () => (require('../package.json').name != null)
 }
