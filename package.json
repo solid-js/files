@@ -5,15 +5,16 @@
   "types": "dist/index.d.ts",
   "dependencies": {},
   "devDependencies": {
-    "@types/node": "^10.12.11",
+    "@types/glob": "^7.1.1",
+    "@types/node": "^10.12.18",
     "@zouloux/semver-increment": "^0.2.0",
     "docsify": "^4.8.6",
     "docsify-cli": "^4.3.0",
     "gh-pages": "^1.2.0",
-    "husky": "^1.2.0",
+    "husky": "^1.3.1",
     "mocha": "^5.2.0",
     "npm-scripts-info": "^0.3.9",
-    "typescript": "^3.2.1"
+    "typescript": "^3.2.2"
   },
   "scripts": {
     "help": "node tools/help.js",
@@ -23,7 +24,7 @@
     "?test": "echo Run unit tests on compiled files.",
     "test": "mocha tests/tests.js",
     "?dev": "echo Use dev.js to work on your lib before it's testable.",
-    "dev": "npm run build --silent && node tests/dev",
+    "dev": "npm run build --silent quick-compile && node tests/dev",
     "?check": "echo Clean, build and run tests.",
     "check": "npm run clean --silent && npm run build --silent && npm run test --silent",
     "2-------------------------------------": " PACKAGE TOOLS ",
@@ -35,7 +36,10 @@
     "increment": "node tools/increment",
     "3-------------------------------------": " DOCUMENTATION ",
     "?doc": "echo Start documentation server.",
-    "doc": "docsify serve doc"
+    "doc": "docsify serve doc",
+    "4-------------------------------------": " PUBLISH ",
+    "?publish": "echo Publish new version on Git / NPM and update documentation.\nUsage : npm run publish (patch|minor|major) \"commit message\" ",
+    "publish": "node tools/publish"
   },
   "husky": {
     "hooks": {

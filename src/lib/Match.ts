@@ -1,16 +1,24 @@
-import * as path from 'path'
-import * as fs from 'fs'
+//import * as path from 'path'
+//import * as fs from 'fs'
 import * as glob from 'glob'
-import * as fse from 'fs-extra'
+//import * as fse from 'fs-extra'
 import * as FileUtils from  './FileUtils'
 import { FileEntity } from './FileEntity'
 import { File } from './File'
 import { Folder } from './Folder'
 
+// -----------------------------------------------------------------------------
+
 interface IFilter
 {
 	(file:string) : boolean
 }
+
+type EntityHandler 	= (entity:FileEntity) 	=> any
+type FileHandler 	= (entity:File) 		=> any
+type FolderHandler 	= (entity:Folder) 		=> any
+
+// -----------------------------------------------------------------------------
 
 /**
  * Target files and folders from a glob.
@@ -18,9 +26,9 @@ interface IFilter
  * @param cwd Root directory to search from. Default is process.cwd()
  * @param filter Filter function to filter some files at each updates. Useful to simplify glob pattern.
  */
-export function F$ (pattern:string, cwd?:string, filter?:IFilter)
+export async function F$ (pattern:string, cwd?:string, filter?:IFilter)
 {
-	return new Match(pattern, cwd, filter)
+	return await new Match(pattern, cwd, filter)
 }
 
 
@@ -29,16 +37,17 @@ export class Match
 	// ------------------------------------------------------------------------- LOCALS
 
 	// Glob pattern @see https://www.npmjs.com/package/glob
-	pattern		:string
+	readonly pattern		:string
 
 	// Root directory to search from.
-	cwd			:string
+	readonly cwd			:string
 
 	// Filter function to filter some files at each updates. Useful to simplify glob pattern.
-	filter		:IFilter
+	readonly filter			:IFilter
 
 	// List of all file and folders paths found after update() from glob and filter.
-	paths		:string[];
+	protected _paths		:string[];
+	get paths () { return this._paths }
 
 
 	// ------------------------------------------------------------------------- INIT & UPDATE
@@ -49,14 +58,14 @@ export class Match
 	 * @param cwd Root directory to search from. Default is process.cwd()
 	 * @param filter Filter function to filter some files at each updates. Useful to simplify glob pattern.
 	 */
-	constructor ( pattern:string, cwd?:string, filter?:IFilter )
+	async constructor ( pattern:string, cwd?:string, filter?:IFilter )
 	{
 		// Save match parameters and search for the first time
-		this.pattern 	= pattern;
-		this.cwd 		= cwd || process.cwd();
-		this.filter 	= filter;
+		this.pattern 	= pattern
+		this.cwd 		= cwd || process.cwd()
+		this.filter 	= filter
 
-		this.update();
+		await this.update()
 	}
 
 	/**
@@ -65,18 +74,33 @@ export class Match
 	 * a new Match.paths property is written after this call.
 	 * Match.filter is used to filter files paths.
 	 */
-	update ()
+	async update ():Promise<void>
 	{
-		// Get all file paths from glob
-		this.paths = glob.sync( this.pattern, {
-			cwd: this.cwd
-		});
-
-		// Filter all those file paths if there is a filter
-		if ( this.filter )
+		return new Promise( (resolve, reject) =>
 		{
-			this.paths = this.paths.filter( this.filter );
-		}
+			// Get all file paths from glob
+			glob( this.pattern, {
+				cwd: this.cwd,
+			}, ( error, paths ) =>
+			{
+				if ( error )
+				{
+					reject( error );
+					return;
+				}
+
+				//
+				this._paths = paths;
+
+				// Filter all those file paths if there is a filter
+				if ( this.filter )
+				{
+					this._paths = this._paths.filter( this.filter );
+				}
+
+				resolve();
+			});
+		});
 	}
 
 
@@ -84,12 +108,12 @@ export class Match
 
 	/**
 	 * Browse through all targeted files and folders from glob.
-	 * @param pHandler First argument will be a FileEntity object (File or Folder)
+	 * @param handler First argument will be a FileEntity object (File or Folder)
 	 */
-	all ( entryHandler : ((entity:FileEntity) => any) ) : any[]
+	all ( handler : EntityHandler ) : any[]
 	{
-		return this.paths.map( filePath =>
-			entryHandler(
+		return this._paths.map( filePath =>
+			handler(
 				FileUtils.isFile( filePath )
 				? new File( filePath )
 				: new Folder( filePath )
@@ -99,28 +123,28 @@ export class Match
 
 	/**
 	 * Browse through all targeted files (without folders) from glob.
-	 * @param pHandler First argument will be a File object
+	 * @param handler First argument will be a File object
 	 */
-	files ( entryHandler : ((entity:File) => any) ) : any[]
+	files ( handler : FileHandler ) : any[]
 	{
-		return this.paths.filter(
+		return this._paths.filter(
 			filePath => FileUtils.isFile( filePath )
 		)
 		.map( filePath => new File( filePath ) )
-		.map( entryHandler )
+		.map( handler )
 	}
 
 	/**
 	 * Browse through all targeted folder (without files) from glob.
-	 * @param pHandler First argument will be a Folder object
+	 * @param handler First argument will be a Folder object
 	 */
-	folders ( entryHandler : ((entity:Folder) => any) ) : any[]
+	folders ( handler : FolderHandler ) : any[]
 	{
-		return this.paths.filter(
+		return this._paths.filter(
 			filePath => FileUtils.isFolder( filePath )
 		)
 		.map( filePath => new Folder( filePath ) )
-		.map( entryHandler )
+		.map( handler )
 	}
 
 
@@ -143,10 +167,10 @@ export class Match
 			// Add file path so if a file is added and all options are set to false
 			// global hash still changes.
 			file.path
-			+ '&'
+			+ '#'
 			// Add last modified timestamp to hash if asked
 			+ (lastModified ? file.lastModified() : '')
-			+ '-'
+			+ '#'
 			// Add file size to hash if asked
 			+ (size ? file.size() : '')
 		));
