@@ -5,10 +5,10 @@
 
 		// Included libraries for NPM
 		// You can add libs for Dom, Node, etc ...
-		"lib": ["ES2016", "ES2017", "ES2018", "ESNext"],
+		"lib": ["esnext"],
 
 		// Where typescript files are
-    	"rootDir": "./src",
+		"rootDir": "./src",
 
 		// Typings roots. Use node_modules types
 		// and also types folder to be able to create new types
@@ -18,12 +18,12 @@
 		// --------------------------------------------------------------------- OUTPUT
 
 		// Where js and d.ts file are created
-    	"outDir": "./dist",
+		"outDir": "./dist",
 
 		// Compile typescript files to ready-to-use es next modules
 		// Note : tsconfig.module.json will output mjs files.
 		"module": "commonjs",
-    	"target": "esnext",
+		"target": "esnext",
 		"moduleResolution": "node",
 
 		// Create d.ts files from typescript files

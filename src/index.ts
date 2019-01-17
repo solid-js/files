@@ -1,12 +1,15 @@
+
 export * from './lib/Match';
 export * from './lib/File';
 export * from './lib/Folder';
+
+// TODO
 
 export let defaultTemplateMarkers = ['{{', '}}']
 
 export function setDefaultTemplateMarkers (open:string, close:string)
 {
-	defaultTemplateMarkers = [open, close];
+	defaultTemplateMarkers = [open, close]
 }
 
 
@@ -22,6 +25,6 @@ export function setDefaultTemplateMarkers (open:string, close:string)
 
 
 // V3 : watch()
-
+// V3 : streams / buffers
 
 

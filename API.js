@@ -1,6 +1,7 @@
 
-
-
+/**
+ * DONE
+ */
 
 // Parcourir des fichiers et dossiers avec glob
 Match('**/*.png').all( fileEntity => ... );
@@ -13,9 +14,7 @@ Match('**/*.png').folders( folder => ... );
 
 
 Match('**/*.png').glob -> '**/*.png'
-
-Match('**/*.png').update();
-Match('**/*.png').paths
+Match('**/*.png').update() -> ['path', 'other-file' ...];
 
 
 

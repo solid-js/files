@@ -4,8 +4,14 @@
  * Useful when trying to get something working before it's testable.
  */
 
-const { F$ } = require('../dist/index');
+const { F$, F$ync } = require('../dist/index');
 
-const a = F$('**/1.txt', 'tests/warzone');
+(async () =>
+{
+	const allTextFiles = await F$('**/*.txt', 'tests/warzone');
 
-console.log( a );
+	allTextFiles.all( file =>
+	{
+		console.log(file);
+	})
+})();

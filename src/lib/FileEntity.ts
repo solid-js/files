@@ -23,6 +23,7 @@ export class FileEntity
 	{
 		FileUtils.exists( this.path );
 	}
+	// Aliases
 	isReal () { return this.exists() }
 
 	/**
@@ -32,6 +33,7 @@ export class FileEntity
 	{
 		FileUtils.isFolder( this.path );
 	}
+	// Aliases
 	isDir () { return this.isFolder() }
 	isDirectory () { return this.isFolder() }
 

@@ -19,7 +19,6 @@ describe('Check Match', () =>
 {
 	it('Match a list of files', done =>
 	{
-
 		assert.equal(typeof Match, 'function', 'Match is not a function.');
 		done();
 	});
