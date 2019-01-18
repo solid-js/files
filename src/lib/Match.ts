@@ -109,12 +109,13 @@ export class Match
 			// In sync mode
 			if ( this.sync )
 			{
-				// Resolve synchronously filtered paths from sync glob function
-				resolve(
-					this.filterPaths(
-						glob.sync( this.pattern, options )
-					)
-				)
+				try
+				{
+					// Resolve synchronously filtered paths from sync glob function
+					const paths = glob.sync( this.pattern, options )
+					resolve( this.filterPaths( paths ) )
+				}
+				catch (e) { reject( e ) }
 				return
 			}
 
@@ -189,8 +190,8 @@ export class Match
 			const completePath = path.join( this.cwd, localFilePath )
 			handler(
 				FileUtils.isFile( completePath )
-				? new File( completePath )
-				: new Folder( completePath )
+				? new File( completePath, this.sync )
+				: new Folder( completePath, this.sync )
 			)
 		})
 	}
@@ -206,7 +207,7 @@ export class Match
 		return this._paths.filter(
 			filePath => FileUtils.isFile( filePath )
 		)
-		.map( filePath => new File( filePath ) )
+		.map( filePath => new File( filePath, this.sync ) )
 		.map( handler )
 	}
 
@@ -221,7 +222,7 @@ export class Match
 		return this._paths.filter(
 			filePath => FileUtils.isFolder( filePath )
 		)
-		.map( filePath => new Folder( filePath ) )
+		.map( filePath => new Folder( filePath, this.sync ) )
 		.map( handler )
 	}
 

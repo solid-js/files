@@ -5,13 +5,23 @@ import * as FileUtils from  './FileUtils'
 export class FileEntity
 {
 	// Path pointing to the file or folder
-	path:string
+	readonly path:string
 
-	constructor (filePath:string)
+	// TODO
+	readonly sync:boolean
+
+	constructor (filePath:string, sync = false)
 	{
 		this.path = filePath;
+		this.sync = sync;
+
+		this.init();
 	}
 
+	protected init ()
+	{
+
+	}
 
 	// ------------------------------------------------------------------------- FILE SYSTEM STATES
 
